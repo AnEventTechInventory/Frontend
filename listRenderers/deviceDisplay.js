@@ -13,7 +13,7 @@ const DeviceList = ( ) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [tableData, setTableData] = useState({
-        tableHead: ['Name', 'Description', 'Location', 'Manufacturer', 'Quantity', 'Contents'],
+        tableHead: ['Name', 'Description', 'Location', 'Manufacturer', 'Quantity', 'Type', 'Contents'],
         tableContent: [],
     });
     const [devices, setDevices] = useState([]);
@@ -22,6 +22,14 @@ const DeviceList = ( ) => {
         const throttledFetchData = _.throttle(async () => {
             try {
                 const result = await axios.get('http://localhost:5678/devices');
+                // Handle error codes
+                console.log(result)
+                switch (result.status) {
+                    case 200:
+                        break;
+                    case 204:
+                        throw new Error('Didn\'t get any devices: ' + result.statusText)
+                }
                 // verify that the data is an array
                 if (!Array.isArray(result.data)) {
                     throw new Error('Data retrieved from API is not an array');
@@ -54,6 +62,7 @@ const DeviceList = ( ) => {
                             result.location.name,
                             result.manufacturer.name,
                             result.quantity,
+                            result.type,
                             result.contents
                         ]);
                         return tableData;
