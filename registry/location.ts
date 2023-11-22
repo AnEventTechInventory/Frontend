@@ -1,23 +1,17 @@
 import ApiObject from "./apiObject";
 
 class Location extends ApiObject {
-    constructor(id, name, description) {
+    constructor(id: string, name: string, description: string) {
         super(id, name, description);
     }
     static apiPath = "location";
 
-    static fromApi(locationId) {
-        let json = ApiObject.requestApi(Location.apiPath, locationId);
-        return json.then(
-            (result) => {
-                if (result) {
-                    return this.fromJson(result);
-                }
-            }
-        )
+    static async fromApi(locationId: string): Promise<Location> {
+        return ApiObject.requestApi(Location.apiPath, locationId)
+            .then((result) => { return this.fromJson(result); })
     }
 
-    static fromJson(json) {
+    static fromJson(json: { id: string; name: string; description: string; }) {
         return new Location(json.id, json.name, json.description);
     }
 }

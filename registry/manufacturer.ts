@@ -5,21 +5,18 @@ import Location from "./location";
 class Manufacturer extends ApiObject {
     static apiPath = 'manufacturer';
 
-    constructor(id, name, description) {
+    constructor(id: string, name: string, description: string) {
         super(id, name, description);
     }
-    static fromApi(manufacturerId) {
+    static async fromApi(manufacturerId: string): Promise<Manufacturer> {
         let json = Manufacturer.requestApi(Manufacturer.apiPath, manufacturerId);
-        return json.then(
-            (result) => {
-                if (result) {
-                    return this.fromJson(result);
-                }
-            }
-        )
+        const result = await json;
+        if (result) {
+            return this.fromJson(result);
+        }
     }
 
-    static fromJson(json) {
+    static fromJson(json: { id: string; name: string; description: string; }): Manufacturer {
         return new Manufacturer(json.id, json.name, json.description);
     }
 }

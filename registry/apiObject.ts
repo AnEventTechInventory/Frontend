@@ -2,8 +2,11 @@ import axios from "axios";
 
 class ApiObject {
     static apiRoot = 'http://localhost:5678/';
+    private id: string;
+    private name: string;
+    private description: string;
 
-    constructor(id, name, description) {
+    constructor(id: string, name: string, description: string) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -15,7 +18,7 @@ class ApiObject {
      * @param id   the id of the object
      * @returns {Promise<*>} the object, or none if it doesn't exist or an error occurred
      */
-    static async requestApi(path, id) {
+    static async requestApi(path: string, id: string): Promise<any> {
         try {
             return await axios.get(this.apiRoot + path + "/" + id)
                 .then(response => {
@@ -44,11 +47,11 @@ class ApiObject {
     }
 
     // abstract methods to be implemented by subclasses
-    static fromApi(id) {
+    static fromApi(id: string) {
         throw new Error('Not implemented');
     }
 
-    static fromJson(json) {
+    static fromJson(json: {}) {
         throw new Error('Not implemented');
     }
 }
